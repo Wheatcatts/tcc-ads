@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redefinir Senha - Atlântico Palace</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        .pagina-redefinir {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #004d40, #1b7e6b);
+            padding: 2rem;
+        }
+
+        .card-redefinir {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 30px 60px rgba(0,40,30,0.3);
+            width: 100%;
+            max-width: 1000px;
+            overflow: hidden;
+            display: flex;
+            min-height: 500px;
+        }
+
+        .card-redefinir-esquerda {
+            flex: 1;
+            background: linear-gradient(145deg, #004d40, #1b7e6b);
+            color: white;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-redefinir-esquerda .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+
+        .card-redefinir-esquerda .logo span {
+            color: #a8d5c8;
+            font-weight: 600;
+        }
+
+        .card-redefinir-esquerda .tagline {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.3px;
+            margin-bottom: 2.5rem;
+        }
+
+        .card-redefinir-esquerda h2 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .card-redefinir-esquerda p {
+            opacity: 0.85;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .card-redefinir-esquerda .icones-login {
+            font-size: 2rem;
+            opacity: 0.7;
+            gap: 1.5rem;
+            display: flex;
+        }
+
+        .card-redefinir-direita {
+            flex: 1.2;
+            padding: 3rem 2.5rem;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-redefinir-direita h3 {
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+
+        .card-redefinir-direita .subtitulo-form {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .requisitos-senha {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 16px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: #166534;
+        }
+
+        .requisitos-senha ul {
+            list-style: none;
+            margin-top: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .requisitos-senha ul li::before {
+            content: '✓ ';
+            font-weight: 700;
+        }
+
+        .input-senha-wrapper {
+            position: relative;
+        }
+
+        .input-senha-wrapper input {
+            width: 100%;
+            padding: 0.8rem 3rem 0.8rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            background: white;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .input-senha-wrapper input:focus {
+            outline: none;
+            border-color: #004d40;
+        }
+
+        .input-senha-wrapper input.invalido {
+            border-color: #ef4444;
+        }
+
+        .input-senha-wrapper input.valido {
+            border-color: #22c55e;
+        }
+
+        .btn-toggle-senha {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        .barra-forca {
+            height: 4px;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+
+        .barra-forca-preenchida {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s, background-color 0.3s;
+            width: 0%;
+        }
+
+        .texto-forca {
+            font-size: 0.78rem;
+            margin-top: 0.3rem;
+            color: #64748b;
+        }
+
+        .msg-erro-campo {
+            font-size: 0.8rem;
+            color: #ef4444;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .estado-sucesso {
+            text-align: center;
+            padding: 1rem 0;
+            display: none;
+        }
+
+        .estado-sucesso .icone-sucesso {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .estado-sucesso h3 {
+            color: #004d40;
+            margin-bottom: 0.5rem;
+        }
+
+        .estado-sucesso p {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .estado-erro {
+            text-align: center;
+            padding: 1rem 0;
+            display: none;
+        }
+
+        .estado-erro .icone-erro {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .estado-erro h3 {
+            color: #ef4444;
+            margin-bottom: 0.5rem;
+        }
+
+        .estado-erro p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .card-redefinir { flex-direction: column; }
+            .card-redefinir-esquerda { padding: 2rem; }
+            .card-redefinir-direita { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="pagina-redefinir">
+        <div class="card-redefinir">
+
+            <!-- Coluna esquerda -->
+            <div class="card-redefinir-esquerda">
+                <h1 class="logo">atlântico<span>palace</span></h1>
+                <span class="tagline">hotel · desde 2018</span>
+                <h2>Redefinir senha</h2>
+                <p>Crie uma senha forte para manter sua conta protegida. Após redefinir, você será redirecionado para o login.</p>
+                <div class="icones-login">🔐 🌊 🏝️</div>
+            </div>
+
+            <!-- Coluna direita -->
+            <div class="card-redefinir-direita">
+
+                <!-- Estado: carregando token -->
+                <div id="estadoCarregando">
+                    <p style="color:#64748b; text-align:center;">⏳ Verificando link...</p>
+                </div>
+
+                <!-- Estado: formulário -->
+                <div id="estadoFormulario" style="display:none;">
+                    <h3>🔑 Nova senha</h3>
+                    <p class="subtitulo-form">Olá, <strong id="nomeUsuario"></strong>! Escolha uma nova senha para sua conta.</p>
+
+                    <div class="requisitos-senha">
+                        <strong>Requisitos:</strong>
+                        <ul>
+                            <li>Mínimo de 6 caracteres</li>
+                            <li>Letras e números recomendados</li>
+                        </ul>
+                    </div>
+
+                    <div class="grupo-campo-login">
+                        <label>Nova senha</label>
+                        <div class="input-senha-wrapper">
+                            <input type="password" id="novaSenha" placeholder="Digite sua nova senha">
+                            <button class="btn-toggle-senha" type="button" onclick="toggleSenha('novaSenha', this)">👁️</button>
+                        </div>
+                        <div class="barra-forca"><div class="barra-forca-preenchida" id="barraForca"></div></div>
+                        <div class="texto-forca" id="textoForca"></div>
+                        <div class="msg-erro-campo" id="erroNovaSenha">Senha muito curta (mínimo 6 caracteres)</div>
+                    </div>
+
+                    <div class="grupo-campo-login">
+                        <label>Confirmar senha</label>
+                        <div class="input-senha-wrapper">
+                            <input type="password" id="confirmarSenha" placeholder="Repita a nova senha">
+                            <button class="btn-toggle-senha" type="button" onclick="toggleSenha('confirmarSenha', this)">👁️</button>
+                        </div>
+                        <div class="msg-erro-campo" id="erroConfirmarSenha">As senhas não coincidem</div>
+                    </div>
+
+                    <button class="btn-acao-login" id="btnRedefinir" onclick="redefinirSenha()">Redefinir senha</button>
+                </div>
+
+                <!-- Estado: sucesso -->
+                <div class="estado-sucesso" id="estadoSucesso">
+                    <div class="icone-sucesso">✅</div>
+                    <h3>Senha redefinida!</h3>
+                    <p>Sua senha foi atualizada com sucesso.</p>
+                    <a href="index.html" class="btn-acao-login" style="display:block; text-align:center; text-decoration:none;">
+                        Ir para o login
+                    </a>
+                </div>
+
+                <!-- Estado: link inválido -->
+                <div class="estado-erro" id="estadoErro">
+                    <div class="icone-erro">❌</div>
+                    <h3>Link inválido</h3>
+                    <p>Este link de redefinição é inválido ou expirou.<br>Solicite um novo na tela de login.</p>
+                    <a href="index.html" class="btn-acao-login" style="display:block; text-align:center; text-decoration:none; margin-top:1.5rem;">
+                        Voltar ao início
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:3000';
+        let emailUsuario = null;
+
+        // Pega o token (email) da URL
+        function getToken() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('token');
+        }
+
+        // Verifica se o token (email) existe no banco
+        async function verificarToken() {
+            const token = getToken();
+            if (!token) { mostrarEstado('erro'); return; }
+            try {
+                const res = await fetch(`${API}/usuarios/verificar-token?email=${encodeURIComponent(token)}`);
+                const data = await res.json();
+                if (!res.ok || !data.nome_completo) { mostrarEstado('erro'); return; }
+                emailUsuario = token;
+                document.getElementById('nomeUsuario').textContent = data.nome_completo.split(' ')[0];
+                mostrarEstado('formulario');
+            } catch {
+                mostrarEstado('erro');
+            }
+        }
+
+        function mostrarEstado(estado) {
+            document.getElementById('estadoCarregando').style.display = 'none';
+            document.getElementById('estadoFormulario').style.display = estado === 'formulario' ? 'block' : 'none';
+            document.getElementById('estadoSucesso').style.display = estado === 'sucesso' ? 'block' : 'none';
+            document.getElementById('estadoErro').style.display = estado === 'erro' ? 'block' : 'none';
+        }
+
+        function toggleSenha(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+            else { input.type = 'password'; btn.textContent = '👁️'; }
+        }
+
+        function calcularForca(senha) {
+            let forca = 0;
+            if (senha.length >= 6) forca++;
+            if (senha.length >= 10) forca++;
+            if (/[A-Z]/.test(senha)) forca++;
+            if (/[0-9]/.test(senha)) forca++;
+            if (/[^A-Za-z0-9]/.test(senha)) forca++;
+            return forca;
+        }
+
+        document.getElementById('novaSenha').addEventListener('input', function () {
+            const forca = calcularForca(this.value);
+            const barra = document.getElementById('barraForca');
+            const texto = document.getElementById('textoForca');
+            const pct = (forca / 5) * 100;
+            barra.style.width = pct + '%';
+            const niveis = ['', 'Muito fraca', 'Fraca', 'Razoável', 'Boa', 'Forte'];
+            const cores = ['', '#ef4444', '#f97316', '#eab308', '#22c55e', '#16a34a'];
+            barra.style.backgroundColor = cores[forca] || '#e2e8f0';
+            texto.textContent = niveis[forca] || '';
+            texto.style.color = cores[forca] || '#64748b';
+            document.getElementById('erroNovaSenha').style.display = 'none';
+            this.classList.remove('invalido', 'valido');
+            if (this.value.length > 0) this.classList.add(forca >= 1 ? 'valido' : 'invalido');
+        });
+
+        document.getElementById('confirmarSenha').addEventListener('input', function () {
+            const nova = document.getElementById('novaSenha').value;
+            document.getElementById('erroConfirmarSenha').style.display = 'none';
+            this.classList.remove('invalido', 'valido');
+            if (this.value.length > 0) this.classList.add(this.value === nova ? 'valido' : 'invalido');
+        });
+
+        async function redefinirSenha() {
+            const nova = document.getElementById('novaSenha').value;
+            const confirmar = document.getElementById('confirmarSenha').value;
+            let valido = true;
+
+            if (nova.length < 6) {
+                document.getElementById('erroNovaSenha').style.display = 'block';
+                document.getElementById('novaSenha').classList.add('invalido');
+                valido = false;
+            }
+            if (nova !== confirmar) {
+                document.getElementById('erroConfirmarSenha').style.display = 'block';
+                document.getElementById('confirmarSenha').classList.add('invalido');
+                valido = false;
+            }
+            if (!valido) return;
+
+            const btn = document.getElementById('btnRedefinir');
+            btn.textContent = 'Salvando...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API}/usuarios/redefinir-senha`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailUsuario, nova_senha: nova })
+                });
+                if (!res.ok) { throw new Error(); }
+                mostrarEstado('sucesso');
+            } catch {
+                btn.textContent = 'Redefinir senha';
+                btn.disabled = false;
+                alert('Erro ao redefinir senha. Tente novamente.');
+            }
+        }
+
+        verificarToken();
+    </script>
+</body>
+</html>

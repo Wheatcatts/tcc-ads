@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Atlântico Palace - Hotel de Luxo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>emailjs.init('qVyICnehnVybgSYRO');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="cabecalho-principal" id="cabecalho">
+        <div class="container-header">
+            <div class="logo-area">
+                <h1 class="logo">atlântico<span>palace</span></h1>
+                <span class="tagline">hotel · desde 2018</span>
+            </div>
+            <div class="acoes-header">
+                <button id="btnAbrirLogin" class="btn-login-header">Entrar / Cadastrar</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- TELA INICIAL (antes do login) -->
+    <main id="telaInicial" class="tela-inicial">
+        <section class="hero-section-principal">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-badge">⭐⭐⭐⭐⭐ · HOTEL 5 ESTRELAS</div>
+                <h1>Atlântico Palace</h1>
+                <p class="hero-subtitulo">Onde o conforto encontra o mar · Excelência em hospitalidade</p>
+                <div class="hero-estatisticas-principal">
+                    <div class="estatistica-card">
+                        <span class="estatistica-numero">2.000+</span>
+                        <span class="estatistica-label">hóspedes por ano</span>
+                    </div>
+                    <div class="estatistica-card">
+                        <span class="estatistica-numero">4.9</span>
+                        <span class="estatistica-label">nota média</span>
+                    </div>
+                    <div class="estatistica-card">
+                        <span class="estatistica-numero">2018</span>
+                        <span class="estatistica-label">ano de fundação</span>
+                    </div>
+                    <div class="estatistica-card">
+                        <span class="estatistica-numero">40+</span>
+                        <span class="estatistica-label">suítes de luxo</span>
+                    </div>
+                </div>
+                <button id="btnIniciarReserva" class="btn-reserva-principal">📅 Fazer reserva</button>
+            </div>
+        </section>
+
+        <section class="instalacoes-section">
+            <div class="container">
+                <h2 class="titulo-secao">🏨 Nossas instalações</h2>
+                <div class="instalacoes-grid">
+                    <div class="instalacao-card">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=90" alt="Suíte de luxo">
+                        <div class="instalacao-info">
+                            <h3>40+ Suítes de luxo</h3>
+                            <p>Todas com varanda privativa e vista para o mar</p>
+                        </div>
+                    </div>
+                    <div class="instalacao-card">
+                        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=90" alt="Restaurante">
+                        <div class="instalacao-info">
+                            <h3>Restaurante Premiado</h3>
+                            <p>Gastronomia internacional e regional</p>
+                        </div>
+                    </div>
+                    <div class="instalacao-card">
+                        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&q=90" alt="Spa">
+                        <div class="instalacao-info">
+                            <h3>Spa & Bem-estar</h3>
+                            <p>Espaço dedicado ao seu relaxamento</p>
+                        </div>
+                    </div>
+                    <div class="instalacao-card">
+                        <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=600&q=90" alt="Piscina">
+                        <div class="instalacao-info">
+                            <h3>Piscina Infinity</h3>
+                            <p>Vista panorâmica do pôr do sol</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="servicos-destaque">
+            <div class="container">
+                <h2 class="titulo-secao">🛎️ Serviços inclusos na sua estadia</h2>
+                <div class="servicos-grid" id="gridServicosIniciais"></div>
+            </div>
+        </section>
+
+        <section class="duvidas-section">
+            <div class="container">
+                <h2 class="titulo-secao">📞 Dúvidas? Fale conosco</h2>
+                <div class="duvidas-card">
+                    <p><strong>✉️ E-mail:</strong> <a href="mailto:atlanticopalace@gmail.com">atlanticopalace@gmail.com</a></p>
+                    <p><strong>📱 Telefone / WhatsApp:</strong> (11) 91234-5678</p>
+                    <p><strong>🕒 Atendimento:</strong> 24h por dia, 7 dias por semana.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ÁREA DE LOGIN/CADASTRO (usuários comuns) -->
+    <div id="areaLogin" class="area-login oculto">
+        <div class="overlay-login" id="fecharLogin"></div>
+        <div class="painel-login">
+            <button class="btn-fechar-login" id="fecharLoginBtn">&times;</button>
+            <div class="painel-duplo-login">
+                <div class="coluna-esquerda-login">
+                    <h2>Bem-vindo de volta</h2>
+                    <p>Acesse sua conta para ver ofertas exclusivas e gerenciar suas reservas.</p>
+                    <div class="icones-login">🌊 🌴 🏝️</div>
+                </div>
+                <div class="coluna-direita-login">
+                    <div class="botoes-tabs-login">
+                        <button class="tab-btn-login ativo" id="btnLoginTab">🔐 Entrar</button>
+                        <button class="tab-btn-login" id="btnCadastroTab">📝 Cadastrar</button>
+                        <button class="tab-btn-login" id="btnEsqueciSenhaTab">🔑 Ajuda</button>
+                    </div>
+                    <div id="formLogin" class="form-login-container">
+                        <form id="loginForm">
+                            <h3>Acesse sua conta</h3>
+                            <div class="grupo-campo-login">
+                                <label>E-mail ou telefone</label>
+                                <input type="text" id="loginEmailOuTelefone" placeholder="seu@email.com ou (11) 99999-9999" required>
+                            </div>
+                            <div class="grupo-campo-login">
+                                <label>Senha</label>
+                                <input type="password" id="loginSenha" placeholder="Sua senha" required>
+                            </div>
+                            <button type="submit" class="btn-acao-login">Entrar</button>
+                            <div class="links-login"><a href="#" id="linkEsqueciSenha">Esqueci minha senha</a></div>
+                        </form>
+                    </div>
+                    <div id="formCadastro" class="form-login-container oculto">
+                        <form id="cadastroForm">
+                            <h3>Crie sua conta</h3>
+                            <div class="grid-form-login">
+                                <input type="email" id="cadEmail" placeholder="E-mail" required>
+                                <input type="text" id="cadTelefone" placeholder="Telefone" required>
+                                <input type="text" id="cadCpf" placeholder="CPF" required>
+                                <select id="cadGenero" required>
+                                    <option value="" disabled selected>Gênero</option>
+                                    <option value="Feminino">Feminino</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Não binário">Não binário</option>
+                                    <option value="Prefiro não informar">Prefiro não informar</option>
+                                </select>
+                                <input type="text" id="cadNomeCompleto" placeholder="Nome completo" required>
+                                <input type="date" id="cadDataNasc" required>
+                                <input type="text" id="cadCep" placeholder="CEP" maxlength="9">
+                                <input type="text" id="cadEnderecoRua" placeholder="Rua" required>
+                                <input type="text" id="cadEnderecoNumero" placeholder="Número" required>
+                                <input type="text" id="cadEnderecoComplemento" placeholder="Complemento">
+                                <input type="text" id="cadBairro" placeholder="Bairro" required>
+                                <input type="text" id="cadCidade" placeholder="Cidade" required>
+                                <select id="cadEstado" required>
+                                    <option value="" disabled selected>Estado</option>
+                                    <option value="AC">Acre</option><option value="AL">Alagoas</option><option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option><option value="BA">Bahia</option><option value="CE">Ceará</option>
+                                    <option value="DF">Distrito Federal</option><option value="ES">Espírito Santo</option><option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option><option value="MT">Mato Grosso</option><option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MG">Minas Gerais</option><option value="PA">Pará</option><option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option><option value="PE">Pernambuco</option><option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option><option value="RN">Rio Grande do Norte</option><option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option><option value="RR">Roraima</option><option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option><option value="SE">Sergipe</option><option value="TO">Tocantins</option>
+                                </select>
+                                <input type="password" id="cadSenha" placeholder="Senha (min. 6)" required>
+                            </div>
+                            <div class="termos-uso">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="aceitoTermos" required>
+                                    <span class="termos-texto">Eu li e aceito os <a href="#" id="abrirTermosModal">Termos de Uso</a> e a <a href="#" id="abrirPrivacidadeModal">Política de Privacidade</a></span>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn-acao-login">Cadastrar</button>
+                            <div class="links-login"><a href="#" id="mudarParaLogin">Já tenho conta</a></div>
+                        </form>
+                    </div>
+                    <div id="formEsqueciSenha" class="form-login-container oculto">
+                        <form id="esqueciSenhaForm">
+                            <h3>Recuperar acesso</h3>
+                            <p>Informe seu e-mail ou telefone cadastrado.</p>
+                            <div class="grupo-campo-login">
+                                <input type="text" id="recuperacaoEmailOuTelefone" placeholder="E-mail ou telefone" required>
+                            </div>
+                            <button type="submit" class="btn-acao-login">Enviar instruções</button>
+                            <div class="links-login"><a href="#" id="voltarParaLogin">Voltar ao login</a></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO PRINCIPAL (APÓS LOGIN) -->
+    <main id="conteudoPrincipal" class="conteudo-principal oculto">
+        <div class="boas-vindas-usuario">
+            <p>👋 Olá, <span id="userNameDisplay">Usuário</span>! <button id="btnLogout" class="btn-logout">Sair</button></p>
+            <div class="icones-flutuantes">
+                <div class="reservas-icon" id="reservasIcon" title="Minhas reservas">📋 <span id="reservasQuantidade">0</span></div>
+                <div class="carrinho-icon" id="carrinhoIcon" title="Meu carrinho">🛒 <span id="carrinhoQuantidade">0</span></div>
+            </div>
+        </div>
+
+        <section class="hero-section">
+            <div class="container-hero">
+                <div class="hero-badge">⭐⭐⭐⭐⭐ · HOTEL 5 ESTRELAS</div>
+                <h2>Atlântico Palace</h2>
+                <p class="hero-subtitulo">Excelência em hospitalidade no litoral brasileiro</p>
+                <div class="hero-estatisticas">
+                    <div class="estatistica-item"><span class="estatistica-numero">2.000+</span><span class="estatistica-label">hóspedes por ano</span></div>
+                    <div class="estatistica-item"><span class="estatistica-numero">4.9</span><span class="estatistica-label">nota média</span></div>
+                    <div class="estatistica-item"><span class="estatistica-numero">2018</span><span class="estatistica-label">ano de fundação</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="secao-quartos">
+            <div class="container">
+                <h3 class="titulo-secao">🏨 Nossas suítes e acomodações</h3>
+                <div class="seletor-datas">
+                    <div class="campo-data"><label>Check-in</label><input type="date" id="checkinDate" class="input-data" min=""></div>
+                    <div class="campo-data"><label>Check-out</label><input type="date" id="checkoutDate" class="input-data"></div>
+                    <button id="calcularDatas" class="btn-calcular">Verificar disponibilidade</button>
+                </div>
+                <div class="quartos-grid" id="gridQuartos"></div>
+            </div>
+        </section>
+
+        <section class="secao-servicos">
+            <div class="container">
+                <h3 class="titulo-secao">🛎️ Serviços inclusos na sua estadia</h3>
+                <div class="servicos-grid" id="gridServicos"></div>
+            </div>
+        </section>
+
+        <section class="secao-avaliacoes">
+            <div class="container">
+                <h3 class="titulo-secao">⭐ O que nossos hóspedes dizem</h3>
+                <div class="avaliacoes-resumo">
+                    <span class="nota-media">4.9</span><span class="nota-max">/5.0</span>
+                    <span class="quantidade" id="quantidadeAvaliacoes">(6 avaliações reais)</span>
+                </div>
+                <div class="form-avaliacao">
+                    <h4>Deixe sua avaliação</h4>
+                    <div class="estrelas-input" id="estrelasInput">
+                        <span class="estrela" data-valor="1">☆</span><span class="estrela" data-valor="2">☆</span>
+                        <span class="estrela" data-valor="3">☆</span><span class="estrela" data-valor="4">☆</span>
+                        <span class="estrela" data-valor="5">☆</span>
+                    </div>
+                    <textarea id="comentarioInput" placeholder="Escreva seu comentário..." rows="3"></textarea>
+                    <button id="btnEnviarAvaliacao" class="btn-enviar-avaliacao">Enviar avaliação</button>
+                </div>
+                <div class="avaliacoes-lista" id="listaAvaliacoes"></div>
+            </div>
+        </section>
+
+        <section class="duvidas-section">
+            <div class="container">
+                <h2 class="titulo-secao">📞 Dúvidas? Fale conosco</h2>
+                <div class="duvidas-card">
+                    <p><strong>✉️ E-mail:</strong> <a href="mailto:atlanticopalace@gmail.com">atlanticopalace@gmail.com</a></p>
+                    <p><strong>📱 Telefone / WhatsApp:</strong> (11) 91234-5678</p>
+                    <p><strong>🕒 Atendimento:</strong> 24h por dia, 7 dias por semana.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAIS -->
+    <div id="modalCarrinho" class="modal oculto">
+        <div class="modal-conteudo">
+            <span class="modal-fechar" id="fecharCarrinho">&times;</span>
+            <h2>🛒 Sua reserva</h2>
+            <div id="carrinhoConteudo" class="carrinho-conteudo"></div>
+            <div class="carrinho-total" id="carrinhoTotal"></div>
+            <button class="btn-finalizar" id="btnIrParaPagamento">Finalizar compra</button>
+        </div>
+    </div>
+
+    <div id="modalReservas" class="modal oculto">
+        <div class="modal-conteudo">
+            <span class="modal-fechar" id="fecharReservas">&times;</span>
+            <h2>📋 Minhas reservas</h2>
+            <div id="reservasConteudo" class="reservas-conteudo"></div>
+        </div>
+    </div>
+
+    <div id="modalConfirmacao" class="modal oculto">
+        <div class="modal-conteudo modal-sucesso">
+            <span class="modal-fechar" id="fecharConfirmacao">&times;</span>
+            <div class="sucesso-conteudo">
+                <div class="sucesso-icone">✅</div>
+                <h2>Reserva finalizada!</h2>
+                <p>Sua reserva foi realizada com sucesso.</p>
+                <p class="sucesso-detalhe" id="confirmacaoDetalhe"></p>
+                <button class="btn-finalizar" id="btnFecharConfirmacao">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalDetalhes" class="modal oculto">
+        <div class="modal-conteudo">
+            <span class="modal-fechar" id="fecharDetalhes">&times;</span>
+            <div id="modalDetalhesConteudo"></div>
+        </div>
+    </div>
+
+    <div id="modalTermos" class="modal oculto">
+        <div class="modal-conteudo">
+            <span class="modal-fechar" id="fecharTermosModal">&times;</span>
+            <h2>📋 Termos de Uso</h2>
+            <div class="termos-conteudo">
+                <p><strong>1. Aceitação dos Termos</strong><br>Ao se cadastrar e utilizar os serviços do Hotel Atlântico Palace, você concorda integralmente com estes Termos de Uso.</p>
+                <p><strong>2. Reservas</strong><br>Todas as reservas estão sujeitas à disponibilidade no momento da confirmação. Os preços podem variar conforme a temporada.</p>
+                <p><strong>3. Cancelamentos e Reembolsos</strong><br>Cancelamentos feitos com até 48 horas de antecedência não terão custo. Após esse período, será cobrada 50% da diária.</p>
+                <p><strong>4. Check-in e Check-out</strong><br>Check-in a partir das 14h e check-out até as 12h. Horários especiais mediante solicitação.</p>
+                <p><strong>5. Responsabilidades do Hóspede</strong><br>O hóspede é responsável por danos causados às instalações do hotel durante sua estadia.</p>
+                <p><strong>6. Privacidade</strong><br>Seus dados são protegidos e utilizados apenas para fins de reserva e comunicação sobre sua estadia.</p>
+            </div>
+            <button class="btn-acao-login" onclick="fecharModal('modalTermos')">Entendi</button>
+        </div>
+    </div>
+
+    <div id="modalPrivacidade" class="modal oculto">
+        <div class="modal-conteudo">
+            <span class="modal-fechar" id="fecharPrivacidadeModal">&times;</span>
+            <h2>🔒 Política de Privacidade</h2>
+            <div class="termos-conteudo">
+                <p><strong>1. Coleta de Dados</strong><br>Coletamos informações como nome, e-mail, telefone, CPF e endereço para processar suas reservas e oferecer um atendimento personalizado.</p>
+                <p><strong>2. Uso das Informações</strong><br>Utilizamos seus dados exclusivamente para:<br>- Processar e confirmar reservas<br>- Enviar comunicados sobre sua estadia<br>- Melhorar nossos serviços</p>
+                <p><strong>3. Compartilhamento</strong><br>Não compartilhamos seus dados com terceiros, exceto quando necessário para processamento de pagamentos.</p>
+                <p><strong>4. Segurança dos Dados</strong><br>Adotamos medidas de segurança para proteger suas informações contra acesso não autorizado.</p>
+                <p><strong>5. Seus Direitos</strong><br>Você pode solicitar a correção ou exclusão de seus dados a qualquer momento.</p>
+            </div>
+            <button class="btn-acao-login" onclick="fecharModal('modalPrivacidade')">Entendi</button>
+        </div>
+    </div>
+
+    <!-- ÁREA DE COLABORADORES -->
+    <div id="areaColaboradores" class="area-colaboradores oculto">
+        <div class="painel-colaboradores">
+            <button class="btn-fechar-colaboradores" id="fecharColaboradores">&times;</button>
+            <div id="colaboradorLogin" class="colaborador-login">
+                <div class="colaborador-login-box">
+                    <span class="colaborador-login-icone">🔐</span>
+                    <h2>Área de Colaboradores</h2>
+                    <p>Acesse com suas credenciais</p>
+                    <form id="colaboradorLoginForm">
+                        <div class="grupo-campo-login"><label>E-mail</label><input type="email" id="colabEmail" required></div>
+                        <div class="grupo-campo-login"><label>Senha</label><input type="password" id="colabSenha" required></div>
+                        <button type="submit" class="btn-login-colaborador">Entrar</button>
+                    </form>
+                </div>
+            </div>
+            <div id="colaboradorPainel" class="colaborador-painel oculto">
+                <div class="colaborador-header">
+                    <div class="colaborador-info">
+                        <div class="colaborador-avatar">👤</div>
+                        <div><h3 id="colabNome">Nome</h3><span class="colaborador-cargo-badge" id="colabCargo">Cargo</span></div>
+                    </div>
+                    <div class="colaborador-acoes-header">
+                        <button class="btn-logout-colaborador" id="btnLogoutColaborador">Sair</button>
+                    </div>
+                </div>
+                <div class="colaborador-nav">
+                    <button class="nav-item ativo" data-secao="dashboard">📊 Dashboard</button>
+                    <button class="nav-item" data-secao="avaliacoes">⭐ Avaliações</button>
+                    <button class="nav-item" data-secao="chats">💬 Central de Atendimento</button>
+                    <button class="nav-item" data-secao="gestao" id="navGestao">👥 Gestão</button>
+                </div>
+                <div class="colaborador-conteudo">
+                    <div id="secao-dashboard" class="painel-secao ativo">
+                        <div class="stats-grid">
+                            <div class="stat-card"><div class="stat-icon blue">👥</div><div class="stat-info"><span class="stat-valor" id="dashUsuarios">0</span><span class="stat-label">Usuários</span></div></div>
+                            <div class="stat-card"><div class="stat-icon green">📋</div><div class="stat-info"><span class="stat-valor" id="dashReservas">0</span><span class="stat-label">Reservas</span></div></div>
+                            <div class="stat-card"><div class="stat-icon amber">⭐</div><div class="stat-info"><span class="stat-valor" id="dashAvaliacoes">0</span><span class="stat-label">Avaliações</span></div></div>
+                            <div class="stat-card"><div class="stat-icon purple">💬</div><div class="stat-info"><span class="stat-valor" id="dashChats">0</span><span class="stat-label">Chats</span></div></div>
+                        </div>
+                    </div>
+                    <div id="secao-avaliacoes" class="painel-secao">
+                        <div class="avaliacoes-toolbar">
+                            <input type="text" id="buscarAvaliacao" placeholder="🔍 Buscar avaliação..." class="search-input">
+                            <select id="filtroEstrelasColab" class="filter-select">
+                                <option value="todas">Todas as estrelas</option>
+                                <option value="5">⭐⭐⭐⭐⭐ (5)</option><option value="4">⭐⭐⭐⭐ (4)</option>
+                                <option value="3">⭐⭐⭐ (3)</option><option value="2">⭐⭐ (2)</option><option value="1">⭐ (1)</option>
+                            </select>
+                        </div>
+                        <div id="avaliacoesContainer" class="avaliacoes-colab-lista"></div>
+                    </div>
+                    <div id="secao-chats" class="painel-secao">
+                        <div class="chat-layout">
+                            <div class="chat-sidebar"><div class="chat-sidebar-header">💬 Conversas</div><div class="chat-contacts" id="chatContactsList"></div></div>
+                            <div class="chat-main"><div id="chatActiveContainer"></div></div>
+                        </div>
+                    </div>
+                    <div id="secao-gestao" class="painel-secao">
+                        <div class="gestao-header"><div class="gestao-title"><h2>👥 Colaboradores</h2></div><button class="btn-add-colaborador" id="btnMostrarFormColab">+ Novo colaborador</button></div>
+                        <div id="formNovoColaborador" class="form-colaborador-modal oculto">
+                            <h3>Cadastrar novo colaborador</h3>
+                            <div class="form-grid-2col">
+                                <input type="text" id="novoColabNome" placeholder="Nome completo">
+                                <input type="email" id="novoColabEmail" placeholder="E-mail">
+                                <input type="text" id="novoColabTelefone" placeholder="Telefone">
+                                <select id="novoColabNivel"><option value="colaborador">Colaborador</option><option value="superior">Superior</option></select>
+                                <input type="text" id="novoColabCargo" placeholder="Cargo">
+                                <input type="password" id="novoColabSenha" placeholder="Senha">
+                            </div>
+                            <div class="form-colaborador-acoes">
+                                <button class="btn-acao-login" id="btnSalvarColaborador">Salvar</button>
+                                <button class="btn-logout-colaborador" id="btnCancelarFormColab">Cancelar</button>
+                            </div>
+                        </div>
+                        <div id="listaColaboradores" class="colaboradores-table">
+                            <div class="colaboradores-table-header"><span>Nome</span><span>E-mail</span><span>Cargo</span><span>Nível</span><span>Ações</span></div>
+                            <div id="colaboradoresListContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-colaboradores-flutuante" id="btnAbrirColaboradores">👥</button>
+
+    <script src="js/dados.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/colaboradores.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/hotel.js"></script>
+</body>
+</html>
