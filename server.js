@@ -160,7 +160,7 @@ app.get('/quartos', async (req, res) => {
         const { checkin, checkout } = req.query;
         // Sem datas: retorna todos (painel admin)
         if (!checkin || !checkout) {
-            const result = await pool.query('SELECT * FROM quartos ORDER BY preco_diaria');
+            const result = await pool.query('SELECT * FROM quartos ORDER BY preco_diaria asc');
             return res.json(result.rows);
         }
         // Com datas: retorna só os disponíveis (sem conflito de reserva)
@@ -173,7 +173,7 @@ app.get('/quartos', async (req, res) => {
                 WHERE r.checkin < $2
                 AND r.checkout > $1
             )
-            ORDER BY preco_diaria
+            ORDER BY preco_diaria ASC
         `, [checkin, checkout]);
         res.json(result.rows);
     } catch (err) {
@@ -282,8 +282,25 @@ app.get('/reservas', async (req, res) => {
 
 app.get('/reservas/usuario/:usuario_id', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM reservas WHERE usuario_id=$1 ORDER BY criado_em DESC', [req.params.usuario_id]);
+        const result = await pool.query(
+            'SELECT * FROM reservas WHERE usuario_id=$1 AND finalizado=false ORDER BY criado_em DESC',
+            [req.params.usuario_id]
+        );
         res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ erro: err.message });
+    }
+});
+
+// Finalizar reserva (admin)
+app.patch('/reservas/:id/finalizar', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'UPDATE reservas SET finalizado=true WHERE id=$1 RETURNING *',
+            [req.params.id]
+        );
+        if (result.rowCount === 0) return res.status(404).json({ erro: 'Reserva não encontrada.' });
+        res.json(result.rows[0]);
     } catch (err) {
         res.status(500).json({ erro: err.message });
     }
@@ -413,12 +430,16 @@ app.get('/dashboard', async (req, res) => {
 
 app.get('/relatorios', async (req, res) => {
     try {
-        const [usuarios, reservas, avaliacoes, faturamento, ultimas] = await Promise.all([
+        const [usuarios, reservas, avaliacoes, faturamento, ultimas, reservasFuturas, totalQuartos] = await Promise.all([
             pool.query('SELECT COUNT(*) FROM usuarios'),
             pool.query('SELECT COUNT(*) FROM reservas'),
             pool.query('SELECT AVG(estrelas) FROM avaliacoes'),
             pool.query('SELECT COALESCE(SUM(total),0) AS total FROM reservas'),
             pool.query('SELECT * FROM reservas ORDER BY criado_em DESC LIMIT 5'),
+            // Reservas com check-in futuro (ainda não realizadas)
+            pool.query("SELECT COUNT(*) FROM reservas WHERE checkin > NOW()::date"),
+            // Total de quartos reservados (soma das quantidades em reserva_itens)
+            pool.query('SELECT COALESCE(SUM(quantidade),0) AS total FROM reserva_itens'),
         ]);
         res.json({
             total_usuarios: parseInt(usuarios.rows[0].count),
@@ -426,6 +447,8 @@ app.get('/relatorios', async (req, res) => {
             media_avaliacoes: parseFloat(avaliacoes.rows[0].avg || 0).toFixed(1),
             faturamento_total: parseFloat(faturamento.rows[0].total).toFixed(2),
             ultimas_reservas: ultimas.rows,
+            reservas_futuras: parseInt(reservasFuturas.rows[0].count),
+            total_quartos_reservados: parseInt(totalQuartos.rows[0].total),
         });
     } catch (err) {
         res.status(500).json({ erro: err.message });

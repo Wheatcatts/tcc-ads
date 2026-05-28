@@ -29,6 +29,7 @@ function abrirPainelAdministrador() {
                 <button class="admin-tab" data-tab="addServico" style="background:transparent; color:#004d40; border:1px solid #004d40; padding:0.6rem 1.5rem; border-radius:40px; cursor:pointer; font-weight:600;">➕ Adicionar Serviço</button>
                 <button class="admin-tab" data-tab="gerenciarServicos" style="background:transparent; color:#004d40; border:1px solid #004d40; padding:0.6rem 1.5rem; border-radius:40px; cursor:pointer; font-weight:600;">📋 Gerenciar Serviços</button>
                 <button class="admin-tab" data-tab="relatorios" style="background:transparent; color:#004d40; border:1px solid #004d40; padding:0.6rem 1.5rem; border-radius:40px; cursor:pointer; font-weight:600;">📊 Relatórios</button>
+                <button class="admin-tab" data-tab="gerenciarAvaliacoes" style="background:transparent; color:#004d40; border:1px solid #004d40; padding:0.6rem 1.5rem; border-radius:40px; cursor:pointer; font-weight:600;">📋 Gerenciar Avaliações</button>    
             </div>
             <div id="adminTabAddQuarto" class="admin-tab-content">
                 <div style="background:white; border-radius:30px; padding:2rem; box-shadow:0 8px 18px rgba(0,40,30,0.05);">
@@ -77,9 +78,43 @@ function abrirPainelAdministrador() {
                         <div class="stat-card"><div class="stat-icon green">📋</div><div class="stat-info"><span class="stat-valor" id="adminTotalReservas">0</span><span class="stat-label">Reservas realizadas</span></div></div>
                         <div class="stat-card"><div class="stat-icon amber">💰</div><div class="stat-info"><span class="stat-valor" id="adminFaturamentoTotal">R$ 0</span><span class="stat-label">Faturamento total</span></div></div>
                         <div class="stat-card"><div class="stat-icon purple">⭐</div><div class="stat-info"><span class="stat-valor" id="adminMediaAvaliacoes">0</span><span class="stat-label">Média de avaliações</span></div></div>
+                        <div class="stat-card"><div class="stat-icon blue">📅</div><div class="stat-info"><span class="stat-valor" id="adminReservasFuturas">0</span><span class="stat-label">Reservas futuras (pendentes)</span></div></div>
+                        <div class="stat-card"><div class="stat-icon green">🛏️</div><div class="stat-info"><span class="stat-valor" id="adminTotalQuartosReservados">0</span><span class="stat-label">Quartos reservados (total)</span></div></div>
                     </div>
-                    <h3 style="color:#004d40; margin-top:1rem;">Últimas reservas</h3>
-                    <div id="adminUltimasReservas" style="max-height:300px; overflow-y:auto; margin-top:1rem;"></div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
+                        <h3 style="color:#004d40; margin:0;">📋 Histórico de reservas</h3>
+                        <div style="display:flex; gap:0.5rem;">
+                            <select id="adminFiltroReservas" class="input-data" style="width:180px; padding:0.4rem 0.8rem;">
+                                <option value="todas">Todas</option>
+                                <option value="ativas">Ativas</option>
+                                <option value="finalizadas">Finalizadas</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="adminUltimasReservas" style="max-height:400px; overflow-y:auto; margin-top:0.5rem;"></div>
+                </div>
+            </div>
+            <div id="adminTabGerenciarAvaliacoes" class="admin-tab-content" style="display:none;">
+                <div style="background:white; border-radius:30px; padding:2rem; box-shadow:0 8px 18px rgba(0,40,30,0.05);">
+                    <h2 style="color:#004d40; margin-bottom:0.5rem;">⭐ Gerenciar Avaliações</h2>
+                    <div style="display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; align-items:center;">
+                        <input type="text" id="adminBuscarAvaliacao" placeholder="Buscar por nome ou comentário..." class="input-data" style="flex:1; min-width:200px;">
+                        <select id="adminFiltroEstrelas" class="input-data" style="width:160px;">
+                            <option value="todas">Todas as estrelas</option>
+                            <option value="5">⭐⭐⭐⭐⭐ 5 estrelas</option>
+                            <option value="4">⭐⭐⭐⭐ 4 estrelas</option>
+                            <option value="3">⭐⭐⭐ 3 estrelas</option>
+                            <option value="2">⭐⭐ 2 estrelas</option>
+                            <option value="1">⭐ 1 estrela</option>
+                        </select>
+                        <select id="adminFiltroResposta" class="input-data" style="width:180px;">
+                            <option value="todas">Com e sem resposta</option>
+                            <option value="sem">Sem resposta</option>
+                            <option value="com">Com resposta</option>
+                        </select>
+                    </div>
+                    <div id="adminContadorAvaliacoes" style="color:#64748b; font-size:0.9rem; margin-bottom:1rem;"></div>
+                    <div id="adminListaAvaliacoes" style="display:flex; flex-direction:column; gap:1rem;"></div>
                 </div>
             </div>
         </div>
@@ -99,6 +134,7 @@ function abrirPainelAdministrador() {
             if (target === 'addServico') document.getElementById('adminTabAddServico').style.display = 'block';
             if (target === 'gerenciarServicos') { document.getElementById('adminTabGerenciarServicos').style.display = 'block'; carregarListaServicosAdmin(); }
             if (target === 'relatorios') { document.getElementById('adminTabRelatorios').style.display = 'block'; atualizarRelatoriosAdmin(); }
+           if (target === 'gerenciarAvaliacoes') { document.getElementById('adminTabGerenciarAvaliacoes').style.display = 'block'; carregarAvaliacoesAdmin(); }
         });
     });
 
@@ -279,16 +315,221 @@ async function atualizarRelatoriosAdmin() {
         document.getElementById('adminTotalReservas').textContent = data.total_reservas;
         document.getElementById('adminFaturamentoTotal').innerHTML = `R$ ${data.faturamento_total}`;
         document.getElementById('adminMediaAvaliacoes').textContent = data.media_avaliacoes;
-        const ultimasReservasDiv = document.getElementById('adminUltimasReservas');
-        if (data.ultimas_reservas.length === 0) {
-            ultimasReservasDiv.innerHTML = '<p style="text-align:center; color:#64748b;">Nenhuma reserva ainda.</p>';
-        } else {
-            ultimasReservasDiv.innerHTML = data.ultimas_reservas.map(r => `
-                <div class="reserva-item" style="margin-bottom:0.8rem; padding:1rem;">
-                    <div><strong>Check-in:</strong> ${new Date(r.checkin).toLocaleDateString('pt-BR')} | <strong>Check-out:</strong> ${new Date(r.checkout).toLocaleDateString('pt-BR')}</div>
-                    <div><strong>Noites:</strong> ${r.noites} | <strong>Total:</strong> R$ ${r.total}</div>
-                </div>
-            `).join('');
+        document.getElementById('adminReservasFuturas').textContent = data.reservas_futuras;
+        document.getElementById('adminTotalQuartosReservados').textContent = data.total_quartos_reservados;
+        await carregarReservasAdmin();
+
+        // Listener do filtro
+        const filtroEl = document.getElementById('adminFiltroReservas');
+        if (filtroEl && !filtroEl.dataset.listenerAdded) {
+            filtroEl.addEventListener('change', carregarReservasAdmin);
+            filtroEl.dataset.listenerAdded = 'true';
         }
     } catch (err) { console.error('Erro ao carregar relatórios:', err); }
 }
+
+
+async function carregarAvaliacoesAdmin() {
+    const container = document.getElementById('adminListaAvaliacoes');
+    const contador = document.getElementById('adminContadorAvaliacoes');
+    if (!container) return;
+ 
+    container.innerHTML = '<p style="text-align:center; color:#64748b;">Carregando...</p>';
+ 
+    try {
+        const res = await fetch(`${API}/avaliacoes`);
+        avaliacoes = (await res.json()).map(a => ({ ...a, nome: a.nome_autor, data: a.data_avaliacao }));
+    } catch (err) {
+        container.innerHTML = '<p style="text-align:center; color:#ef4444;">Erro ao carregar avaliações.</p>';
+        return;
+    }
+ 
+    // Aplicar filtros
+    const busca = document.getElementById('adminBuscarAvaliacao')?.value.toLowerCase() || '';
+    const filtroEstrelas = document.getElementById('adminFiltroEstrelas')?.value || 'todas';
+    const filtroResposta = document.getElementById('adminFiltroResposta')?.value || 'todas';
+ 
+    let filtradas = avaliacoes.filter(a => {
+        const matchBusca = !busca ||
+            a.nome.toLowerCase().includes(busca) ||
+            a.comentario.toLowerCase().includes(busca);
+        const matchEstrelas = filtroEstrelas === 'todas' || a.estrelas === parseInt(filtroEstrelas);
+        const matchResposta = filtroResposta === 'todas' ||
+            (filtroResposta === 'sem' && !a.resposta) ||
+            (filtroResposta === 'com' && a.resposta);
+        return matchBusca && matchEstrelas && matchResposta;
+    });
+ 
+    if (contador) contador.textContent = `${filtradas.length} avaliação(ões) encontrada(s)`;
+ 
+    if (filtradas.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#64748b; padding:2rem;">Nenhuma avaliação encontrada.</p>';
+        return;
+    }
+ 
+    container.innerHTML = filtradas.map(a => `
+        <div style="background:#f8fafc; border-radius:20px; padding:1.2rem; border:1px solid #e2f0ea;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+                <div style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.5rem;">
+                        <div style="width:36px; height:36px; border-radius:50%; background:#004d40; color:white; display:flex; align-items:center; justify-content:center; font-weight:700;">
+                            ${a.nome.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <strong style="color:#1e293b;">${a.nome}</strong>
+                            <div style="font-size:0.8rem; color:#64748b;">${a.data}</div>
+                        </div>
+                        <div style="margin-left:auto; font-size:1rem;">${'⭐'.repeat(a.estrelas)}${'☆'.repeat(5 - a.estrelas)}</div>
+                    </div>
+                    <p style="color:#334155; margin-bottom:0.5rem;">"${a.comentario}"</p>
+                    ${a.resposta
+                        ? `<div style="background:#e8f5e9; border-left:3px solid #004d40; border-radius:0 8px 8px 0; padding:0.5rem 0.8rem; margin-top:0.5rem; font-size:0.88rem; color:#004d40;">
+                               💬 <strong>Resposta:</strong> ${a.resposta}
+                           </div>`
+                        : `<span style="font-size:0.8rem; color:#f59e0b;">⚠️ Sem resposta</span>`
+                    }
+                </div>
+                <div style="display:flex; flex-direction:column; gap:0.5rem; min-width:120px;">
+                    <button class="btn-responder-avaliacao" onclick="responderAvaliacaoAdmin(${a.id})">
+                        💬 ${a.resposta ? 'Editar resposta' : 'Responder'}
+                    </button>
+                    <button class="btn-excluir-avaliacao" onclick="excluirAvaliacaoAdmin(${a.id})">
+                        🗑️ Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+ 
+    // Listeners dos filtros (re-renderiza ao mudar)
+    ['adminBuscarAvaliacao', 'adminFiltroEstrelas', 'adminFiltroResposta'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && !el.dataset.listenerAdded) {
+            el.addEventListener('input', carregarAvaliacoesAdmin);
+            el.addEventListener('change', carregarAvaliacoesAdmin);
+            el.dataset.listenerAdded = 'true';
+        }
+    });
+}
+ 
+// ============================================================
+// GERENCIAR AVALIAÇÕES (ADMIN)
+// ============================================================
+ 
+
+async function responderAvaliacaoAdmin(id) {
+    const avaliacao = avaliacoes.find(a => a.id === id);
+    const resposta = prompt('Digite sua resposta:', avaliacao?.resposta || '');
+    if (resposta === null) return;
+    if (!resposta.trim()) { alert('A resposta não pode ser vazia.'); return; }
+    try {
+        const res = await fetch(`${API}/avaliacoes/${id}/responder`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resposta: resposta.trim() })
+        });
+        if (!res.ok) { alert('Erro ao salvar resposta.'); return; }
+        carregarAvaliacoesAdmin();
+        renderizarAvaliacoes();
+        mostrarToast('Resposta salva!');
+    } catch (err) {
+        alert('Erro ao conectar com o servidor.');
+    }
+}
+ 
+async function excluirAvaliacaoAdmin(id) {
+    if (!confirm('Tem certeza que deseja excluir esta avaliação? Esta ação não pode ser desfeita.')) return;
+    try {
+        const res = await fetch(`${API}/avaliacoes/${id}`, { method: 'DELETE' });
+        if (!res.ok) { alert('Erro ao excluir avaliação.'); return; }
+        avaliacoes = avaliacoes.filter(a => a.id !== id);
+        carregarAvaliacoesAdmin();
+        renderizarAvaliacoes();
+        mostrarToast('Avaliação excluída.');
+    } catch (err) {
+        alert('Erro ao conectar com o servidor.');
+    }
+}
+ 
+window.carregarAvaliacoesAdmin = carregarAvaliacoesAdmin;
+window.responderAvaliacaoAdmin = responderAvaliacaoAdmin;
+window.excluirAvaliacaoAdmin = excluirAvaliacaoAdmin;
+
+// ============================================================
+// HISTÓRICO DE RESERVAS (ADMIN)
+// ============================================================
+
+async function carregarReservasAdmin() {
+    const container = document.getElementById('adminUltimasReservas');
+    if (!container) return;
+
+    container.innerHTML = '<p style="text-align:center; color:#64748b; padding:1rem;">Carregando...</p>';
+
+    let todasReservas = [];
+    try {
+        const res = await fetch(`${API}/reservas`);
+        todasReservas = await res.json();
+    } catch (err) {
+        container.innerHTML = '<p style="text-align:center; color:#ef4444;">Erro ao carregar reservas.</p>';
+        return;
+    }
+
+    const filtro = document.getElementById('adminFiltroReservas')?.value || 'todas';
+    const filtradas = todasReservas.filter(r => {
+        if (filtro === 'ativas') return !r.finalizado;
+        if (filtro === 'finalizadas') return r.finalizado;
+        return true;
+    });
+
+    if (filtradas.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#64748b; padding:1rem;">Nenhuma reserva encontrada.</p>';
+        return;
+    }
+
+    container.innerHTML = filtradas.map(r => `
+        <div style="background:#f8fafc; border-radius:16px; padding:1rem 1.2rem; margin-bottom:0.7rem; border:1px solid ${r.finalizado ? '#bbf7d0' : '#e2f0ea'}; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.8rem;">
+            <div style="flex:1;">
+                <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem;">
+                    <span style="font-weight:600; color:#1e293b;">Reserva #${r.id}</span>
+                    <span style="font-size:0.75rem; padding:0.2rem 0.7rem; border-radius:20px; font-weight:600;
+                        background:${r.finalizado ? '#dcfce7' : '#fef9c3'};
+                        color:${r.finalizado ? '#166534' : '#854d0e'};">
+                        ${r.finalizado ? '✅ Finalizada' : '⏳ Ativa'}
+                    </span>
+                </div>
+                <div style="font-size:0.88rem; color:#475569;">
+                    📅 <strong>Check-in:</strong> ${new Date(r.checkin).toLocaleDateString('pt-BR')} &nbsp;|&nbsp;
+                    📅 <strong>Check-out:</strong> ${new Date(r.checkout).toLocaleDateString('pt-BR')}
+                </div>
+                <div style="font-size:0.88rem; color:#475569; margin-top:0.2rem;">
+                    🌙 <strong>${r.noites}</strong> noite(s) &nbsp;|&nbsp; 💰 <strong>R$ ${r.total}</strong>
+                </div>
+            </div>
+            ${!r.finalizado ? `
+                <button
+                    onclick="finalizarReservaAdmin(${r.id})"
+                    style="background:#004d40; color:white; border:none; padding:0.5rem 1.2rem; border-radius:40px; cursor:pointer; font-weight:600; font-size:0.85rem; white-space:nowrap;">
+                    ✅ Finalizar
+                </button>
+            ` : `
+                <span style="color:#16a34a; font-size:0.85rem; font-weight:600;">Check-out realizado</span>
+            `}
+        </div>
+    `).join('');
+}
+
+async function finalizarReservaAdmin(id) {
+    if (!confirm(`Finalizar a reserva #${id}? Ela deixará de aparecer no perfil do cliente.`)) return;
+    try {
+        const res = await fetch(`${API}/reservas/${id}/finalizar`, { method: 'PATCH' });
+        if (!res.ok) { alert('Erro ao finalizar reserva.'); return; }
+        mostrarToast('Reserva finalizada com sucesso!');
+        carregarReservasAdmin();
+        atualizarRelatoriosAdmin(); // atualiza os cards de contagem
+    } catch (err) {
+        alert('Erro ao conectar com o servidor.');
+    }
+}
+
+window.carregarReservasAdmin = carregarReservasAdmin;
+window.finalizarReservaAdmin = finalizarReservaAdmin;
